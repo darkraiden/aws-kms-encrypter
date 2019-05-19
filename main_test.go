@@ -1,28 +1,73 @@
 package main
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
-type testFlag struct {
+type flagAsStrings struct {
 	kmsID      string
 	kmsContext string
 }
 
-var flags = []testFlag{
-	{
-		kmsID:      "safhasfk",
-		kmsContext: "foo=bar",
-	},
+type testFlagOpts struct {
+	input  flagAsStrings
+	output error
 }
 
-func testCheckFlags(t *testing.T) {
-	for _, f := range flags {
-		flags := Flags{
-			kmsID:      &f.kmsID,
-			kmsContext: &f.kmsContext,
-		}
-		err := checkFlags(flags)
+func TestCheckFlagsNoErrors(t *testing.T) {
+	var testFlags = []testFlagOpts{
+		{
+			input: flagAsStrings{
+				kmsID:      "thisIsAnID",
+				kmsContext: "thisIsAContext",
+			},
+			output: nil,
+		},
+		{
+			input: flagAsStrings{
+				kmsID:      "123thisIsAnID456",
+				kmsContext: "thisIsAContext999",
+			},
+			output: nil,
+		},
+		{
+			input: flagAsStrings{
+				kmsID:      "$sfj(99237",
+				kmsContext: "1234567890",
+			},
+			output: nil,
+		},
+	}
+	for _, tf := range testFlags {
+		err := checkFlags(Flag{&tf.input.kmsID, &tf.input.kmsContext})
 		if err != nil {
-			t.Errorf("Invalid flags! Expected: KMS ID: %s, KMS Context: %s; Got: %v", *flags.kmsID, *flags.kmsContext, err)
+			t.Errorf("Error validating the input flags. Expected: %v, Got: %v", tf.output, err)
+		}
+	}
+}
+
+func TestCheckFlagsWithErrors(t *testing.T) {
+	var testFlags = []testFlagOpts{
+		{
+			input: flagAsStrings{
+				kmsID:      "",
+				kmsContext: "thisIsAContext",
+			},
+			output: errors.New("Invalid flags.\nUsage: `aws-kms-encrypter -kms-id=\"ThisIsTheIDOfYourKMSKey\" -context=\"KMSEncryptionContext\""),
+		},
+		{
+			input: flagAsStrings{
+				kmsID:      "123thisIsAnID456",
+				kmsContext: "",
+			},
+			output: errors.New("Invalid flags.\nUsage: `aws-kms-encrypter -kms-id=\"ThisIsTheIDOfYourKMSKey\" -context=\"KMSEncryptionContext\""),
+		},
+	}
+	for _, tf := range testFlags {
+		err := checkFlags(Flag{&tf.input.kmsID, &tf.input.kmsContext})
+		if err == nil {
+			t.Errorf("Error validating the input flags. Expected: %v, Got: %v", tf.output, err)
 		}
 	}
 }
