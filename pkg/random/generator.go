@@ -4,10 +4,6 @@ import (
 	"math/rand"
 )
 
-var numbers = "0123456789"
-var specials = "~=+%^*/()[]{}/!@#$?|"
-var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
 // New returns a new random string with a number of characters defined by
 // the function parameter `length` and, eventually, some special chars
 // and digits, depending on whether `specialChars` and/or `digits` are `true`
