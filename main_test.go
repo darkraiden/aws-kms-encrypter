@@ -15,6 +15,10 @@ type testFlagOpts struct {
 	output error
 }
 
+var length = 12
+var specialChars = true
+var digits = true
+
 func TestCheckFlagsNoErrors(t *testing.T) {
 	var testFlags = []testFlagOpts{
 		{
@@ -40,7 +44,7 @@ func TestCheckFlagsNoErrors(t *testing.T) {
 		},
 	}
 	for _, tf := range testFlags {
-		err := checkFlags(Flag{&tf.input.kmsID, &tf.input.kmsContext})
+		err := checkFlags(Flag{&tf.input.kmsID, &tf.input.kmsContext, &length, &specialChars, &digits})
 		if err != nil {
 			t.Errorf("Error validating the input flags. Expected: %v, Got: %v", tf.output, err)
 		}
@@ -65,7 +69,7 @@ func TestCheckFlagsWithErrors(t *testing.T) {
 		},
 	}
 	for _, tf := range testFlags {
-		err := checkFlags(Flag{&tf.input.kmsID, &tf.input.kmsContext})
+		err := checkFlags(Flag{&tf.input.kmsID, &tf.input.kmsContext, &length, &specialChars, &digits})
 		if err == nil {
 			t.Errorf("Error validating the input flags. Expected: %v, Got: %v", tf.output, err)
 		}
