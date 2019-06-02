@@ -3,6 +3,8 @@ package main
 import (
 	"errors"
 	"flag"
+
+	"github.com/darkraiden/aws-kms-encrypter/pkg/random"
 )
 
 var usageMessage = "USAGE: ake -kms-id <yourKMSID> -context <encryptionContext>"
@@ -27,6 +29,8 @@ func main() {
 	flag.Parse()
 
 	// Generate random password
+	password := random.New(*flags.pwdLength, *flags.pwdSpecialChars, *flags.pwdDigits)
+
 	// Encrypt with KMS
 	// Return Payload and raw password
 }
