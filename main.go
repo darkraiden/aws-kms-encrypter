@@ -3,7 +3,9 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
 
+	"github.com/darkraiden/aws-kms-encrypter/pkg/aws/kms"
 	"github.com/darkraiden/aws-kms-encrypter/pkg/random"
 )
 
@@ -32,7 +34,15 @@ func main() {
 	password := random.New(*flags.pwdLength, *flags.pwdSpecialChars, *flags.pwdDigits)
 
 	// Encrypt with KMS
+	encrypter := kms.New(*flags.kmsID, *flags.kmsContext)
+	encryptedPassword, err := encrypter.Encrypt(password)
+	if err != nil {
+		fmt.Println("Error trying to encrypt the new password:")
+		panic(err)
+	}
+
 	// Return Payload and raw password
+	fmt.Printf("The new password is: %s\nThe payload of the encrypted password is: %s", password, string(encryptedPassword))
 }
 
 func checkFlags(flags Flag) error {
