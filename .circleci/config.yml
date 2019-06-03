@@ -43,7 +43,8 @@ jobs:
             - run:
                   name: run build
                   command: |
-                      go build -v
+                      gox -os="linux darwin windows" -arch="amd64" -output="dist/spotifycli_{{.OS}}_{{.Arch}}"
+                      cd dist/ && gzip *
 workflows:
     version: 2
     test-build:
