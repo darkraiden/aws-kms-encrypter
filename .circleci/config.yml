@@ -1,6 +1,6 @@
 version: 2
 jobs:
-    build:
+    dependencies:
         docker:
             - image: circleci/golang:1.12.5
         environment:
@@ -12,11 +12,46 @@ jobs:
                   name: fetch dependencies
                   command: |
                       go mod vendor
+            - persist_to_workspace:
+                  root: /go/src/github.com/darkraiden/aws-kms-encrypter
+                  paths:
+                      - vendor
+    test:
+        docker:
+            - image: circleci/golang:1.12.5
+        environment:
+            GO111MODULE: 'on'
+        working_directory: /go/src/github.com/darkraiden/aws-kms-encrypter
+        steps:
+            - checkout
+            - attach_workspace:
+                  at: /go/src/github.com/darkraiden/aws-kms-encrypter
             - run:
                   name: run tests
                   command: |
                       go test ./...
+    build:
+        docker:
+            - image: circleci/golang:1.12.5
+        environment:
+            GO111MODULE: 'on'
+        working_directory: /go/src/github.com/darkraiden/aws-kms-encrypter
+        steps:
+            - checkout
+            - attach_workspace:
+                  at: /go/src/github.com/darkraiden/aws-kms-encrypter
             - run:
                   name: run build
                   command: |
                       go build -v
+workflows:
+    version: 2
+    test-build:
+        jobs:
+            - dependencies
+            - test:
+                  requires:
+                      - dependencies
+            - build:
+                  requires:
+                      - test
