@@ -1,6 +1,6 @@
 # aws-kms-encrypter
 
-[![GitHub release](http://img.shields.io/github/release/tcnksm/ghr.svg?style=flat-square)][release]
+[![GitHub release](http://img.shields.io/github/release/darkraiden/aws-kms-encrypter.svg?style=flat-square)][release]
 [![CircleCI](https://img.shields.io/travis/tcnksm/ghr.svg?style=flat-square)](https://circleci.com/gh/darkraiden/workflows/aws-kms-encrypter)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)][license]
 
