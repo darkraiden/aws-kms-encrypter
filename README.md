@@ -27,13 +27,13 @@ $ aws-kms-encrypter -kms-id="ThisIsTheIDOfYourKMSKey" -context="KMSEncryptionCon
 
 ### Accepted Flags
 
-|   Name    | Required |                          Description                          |
-| :-------: | :------: | :-----------------------------------------------------------: |
-| `-kms-id` |   Yes    | The ID of the KMS resource to be used to encrypt the password | `-context` | No | The KMS encryption context expressed in `key=value` format, as a string |
-
-| `-length` | No | The length of the new password (default value: `12`) |
-| `-special-chars` | No | Whether the new password should contain special characters or not (default value: `true`) |
-| `-digits` | No | Whether the new password should contain numbers or not (default value: `true`) |
+|       Name       | Required |                                        Description                                        |
+| :--------------: | :------: | :---------------------------------------------------------------------------------------: |
+|    `-kms-id`     |   Yes    |               The ID of the KMS resource to be used to encrypt the password               |
+|    `-context`    |    No    |          The KMS encryption context expressed in `key=value` format, as a string          |
+|    `-length`     |    No    |                   The length of the new password (default value: `12`)                    |
+| `-special-chars` |    No    | Whether the new password should contain special characters or not (default value: `true`) |
+|    `-digits`     |    No    |      Whether the new password should contain numbers or not (default value: `true`)       |
 
 ## Contributing
 
