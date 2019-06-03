@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 
@@ -9,7 +8,7 @@ import (
 	"github.com/darkraiden/aws-kms-encrypter/pkg/random"
 )
 
-var usageMessage = "USAGE: ake -kms-id <yourKMSID> -context <encryptionContext>"
+var usageMessage = "USAGE: `aws-kms-encrypter -kms-id=\"ThisIsTheIDOfYourKMSKey\" -context=\"KMSEncryptionContext\" -length=12 -special-chars=false -digits=false`"
 
 // Flag defines the type of flags passed by the user to the application
 type Flag struct {
@@ -47,7 +46,7 @@ func main() {
 
 func checkFlags(flags Flag) error {
 	if *flags.kmsID == "" || *flags.kmsContext == "" {
-		return errors.New("Invalid flags.\nUsage: `aws-kms-encrypter -kms-id=\"ThisIsTheIDOfYourKMSKey\" -context=\"KMSEncryptionContext\" -length=12 -special-chars=false -digits=false")
+		return fmt.Errorf("Invalid flags.\n%s", usageMessage)
 	}
 
 	return nil
