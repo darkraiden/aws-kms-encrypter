@@ -9,7 +9,14 @@ jobs:
         steps:
             - checkout
             - run:
-                  name: run build
+                  name: fetch dependencies
                   command: |
                       go mod vendor
+            - run:
+                  name: run tests
+                  command: |
+                      go test ./...
+            - run:
+                  name: run build
+                  command: |
                       go build -v
