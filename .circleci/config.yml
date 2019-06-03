@@ -41,10 +41,13 @@ jobs:
             - attach_workspace:
                   at: /go/src/github.com/darkraiden/aws-kms-encrypter
             - run:
+                  name: get gox
+                  command: go get github.com/mitchellh/gox
+            - run:
                   name: run build
                   command: |
                       gox -os="linux darwin windows" -arch="amd64" -output="dist/spotifycli_{{.OS}}_{{.Arch}}"
-                      cd dist/ && gzip *
+                      cd dist/ && gzip *`
 workflows:
     version: 2
     test-build:
