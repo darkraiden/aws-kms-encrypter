@@ -61,8 +61,10 @@ jobs:
                   at: /go/src/github.com/darkraiden/aws-kms-encrypter
             - add_ssh_keys
             - run:
-                  name: get ghr
-                  command: ls -la vendor && go get -u github.com/tcnksm/ghr
+                  name: get utilities
+                  command: |
+                      go get -u github.com/stevenmatthewt/semantics
+                      go get -u github.com/tcnksm/ghr
             - run:
                   name: create release
                   command: |
