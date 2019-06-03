@@ -62,7 +62,7 @@ jobs:
             - add_ssh_keys
             - run:
                   name: get ghr
-                  command: ls -la && go get -u github.com/tcnksm/ghr
+                  command: ls -la vendor && go get -u github.com/tcnksm/ghr
             - run:
                   name: create release
                   command: |
