@@ -48,9 +48,27 @@ jobs:
                   command: |
                       gox -os="linux darwin windows" -arch="amd64" -output="dist/spotifycli_{{.OS}}_{{.Arch}}"
                       cd dist/ && gzip *
+    deploy:
+        docker:
+            - image: circleci/golang:1.12.5
+        working_directory: /go/src/github.com/darkraiden/aws-kms-encrypter
+        steps:
+            - add_ssh_keys
+            - run:
+                  name: get ghr
+                  command: go get -u github.com/tcnksm/ghr
+            - run:
+                  name: create release
+                  command: |
+                      tag=$(semantics --output-tag)
+                      if [ "$tag" ]; then
+                        ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $tag dist/
+                      else
+                        echo "The commit message(s) did not indicate a major/minor/patch version."
+                      fi
 workflows:
     version: 2
-    test-build:
+    test-build-deploy:
         jobs:
             - dependencies
             - test:
@@ -59,3 +77,9 @@ workflows:
             - build:
                   requires:
                       - test
+            - deploy:
+                  requires:
+                      - build
+                  filters:
+                      branches:
+                          only: master
