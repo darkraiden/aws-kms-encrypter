@@ -45,7 +45,8 @@ func main() {
 }
 
 func checkFlags(flags Flag) error {
-	if *flags.kmsID == "" || *flags.kmsContext == "" {
+	// if *flags.kmsID == "" || *flags.kmsContext == "" {
+	if *flags.kmsID == "" {
 		return fmt.Errorf("Invalid flags.\n%s", usageMessage)
 	}
 

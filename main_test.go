@@ -60,13 +60,13 @@ func TestCheckFlagsWithErrors(t *testing.T) {
 			},
 			output: errors.New("Invalid flags.\nUsage: `aws-kms-encrypter -kms-id=\"ThisIsTheIDOfYourKMSKey\" -context=\"KMSEncryptionContext\""),
 		},
-		{
-			input: flagAsStrings{
-				kmsID:      "123thisIsAnID456",
-				kmsContext: "",
-			},
-			output: errors.New("Invalid flags.\nUsage: `aws-kms-encrypter -kms-id=\"ThisIsTheIDOfYourKMSKey\" -context=\"KMSEncryptionContext\""),
-		},
+		// {
+		// 	input: flagAsStrings{
+		// 		kmsID:      "123thisIsAnID456",
+		// 		kmsContext: "",
+		// 	},
+		// 	output: errors.New("Invalid flags.\nUsage: `aws-kms-encrypter -kms-id=\"ThisIsTheIDOfYourKMSKey\" -context=\"KMSEncryptionContext\""),
+		// },
 	}
 	for _, tf := range testFlags {
 		err := checkFlags(Flag{&tf.input.kmsID, &tf.input.kmsContext, &length, &specialChars, &digits})
