@@ -57,6 +57,7 @@ jobs:
             - image: circleci/golang:1.12.5
         working_directory: /go/src/github.com/darkraiden/aws-kms-encrypter
         steps:
+            - checkout
             - attach_workspace:
                   at: /go/src/github.com/darkraiden/aws-kms-encrypter
             - add_ssh_keys
