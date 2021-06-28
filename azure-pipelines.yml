@@ -1,19 +1,25 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
+name: aws-kms-encrypter
 trigger:
-- master
+  branches:
+    include:
+      - master
+pr:
+  branches:
+    include:
+      - master
 
-pool:
-  vmImage: 'ubuntu-latest'
+variables:
+  GO111MODULE: 'on'      
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+  - stage: test
+    dependsOn: []
+    jobs:
+      - job: unit_tests
+        displayName: Run Unit Tests
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+          - script: go mod download && go test -v ./...
+            displayName: 'Run go test command'
