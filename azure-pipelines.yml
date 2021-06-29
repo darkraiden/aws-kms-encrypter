@@ -1,25 +1,40 @@
-name: aws-kms-encrypter
 trigger:
   branches:
     include:
       - master
+  tags:
+    include:
+      - v*
 pr:
   branches:
     include:
       - master
 
+pool:
+  vmImage: 'ubuntu-latest'
+
 variables:
-  GO111MODULE: 'on'      
+  GO111MODULE: 'on'
 
 stages:
-  - stage: test
-    dependsOn: []
+  - stage: release
     jobs:
-      - job: unit_tests
-        displayName: Run Unit Tests
-        pool:
-          vmImage: ubuntu-latest
+      - job: goreleaser
         steps:
-          - checkout: self
-          - script: go mod download && go test -v ./...
+          - bash: |
+              curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
+              sudo cp $(pwd)/bin/goreleaser /var/lib/goreleaser
+              sudo ln -s /var/lib/goreleaser /usr/local/bin/goreleaser
+              rm -rf bin
+            displayName: Install goreleaser
+            workingDirectory: '$(system.defaultWorkingDirectory)'
+          - script: go mod download && go test ./...
             displayName: 'Run go test command'
+          - script: goreleaser --snapshot --skip-publish --rm-dist
+            condition: not(contains(variables['build.sourceBranch'], 'refs/tags/'))
+            displayName: 'Run goreleaser for snapshots'
+          - script: goreleaser --rm-dist
+            condition: contains(variables['build.sourceBranch'], 'refs/tags/')
+            displayName: 'Run goreleaser'
+            env:
+              GITHUB_TOKEN: $(GITHUB_TOKEN)
