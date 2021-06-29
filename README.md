@@ -2,6 +2,7 @@
 
 [![GitHub release](http://img.shields.io/github/release/darkraiden/aws-kms-encrypter.svg?style=flat-square)][release]
 [![CircleCI](https://img.shields.io/circleci/build/github/darkraiden/aws-kms-encrypter.svg)](https://circleci.com/gh/darkraiden/workflows/aws-kms-encrypter)
+[![Build Status](https://dev.azure.com/darkraiden/aws-kms-encrypter/_apis/build/status/darkraiden.aws-kms-encrypter?branchName=refs%2Fpull%2F2%2Fmerge)](https://dev.azure.com/darkraiden/aws-kms-encrypter/_build/latest?definitionId=1&branchName=refs%2Fpull%2F2%2Fmerge)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)][license]
 
 [release]: https://github.com/darkraiden/aws-kms-encrypter/releases
