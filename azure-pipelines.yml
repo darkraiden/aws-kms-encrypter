@@ -17,7 +17,15 @@ variables:
   GO111MODULE: 'on'
 
 stages:
+  - stage: test
+    jobs:
+      - job: run_unit_tests
+        steps:
+          - script: go get && go test ./...
+            displayName: 'Run go test command'
   - stage: release
+    dependsOn: test
+    condition: succeeded('test')
     jobs:
       - job: goreleaser
         steps:
@@ -28,8 +36,6 @@ stages:
               rm -rf bin
             displayName: Install goreleaser
             workingDirectory: '$(system.defaultWorkingDirectory)'
-          - script: go mod download && go test ./...
-            displayName: 'Run go test command'
           - script: goreleaser --snapshot --skip-publish --rm-dist
             condition: not(contains(variables['build.sourceBranch'], 'refs/tags/'))
             displayName: 'Run goreleaser for snapshots'
