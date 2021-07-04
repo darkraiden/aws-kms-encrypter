@@ -1,0 +1,62 @@
+trigger:
+  branches:
+    include:
+      - master
+  tags:
+    include:
+      - v*
+pr:
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  GO111MODULE: 'on'
+
+stages:
+  - stage: test
+    jobs:
+      - job: run_unit_tests
+        steps:
+          - script: go get && go test ./...
+            displayName: 'Run go test command'
+  - stage: release
+    dependsOn: test
+    condition: succeeded('test')
+    jobs:
+      - job: goreleaser
+        steps:
+          - bash: |
+              curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
+              sudo cp $(pwd)/bin/goreleaser /var/lib/goreleaser
+              sudo ln -s /var/lib/goreleaser /usr/local/bin/goreleaser
+              rm -rf bin
+            displayName: Install goreleaser
+            workingDirectory: '$(system.defaultWorkingDirectory)'
+          - script: goreleaser --snapshot --skip-publish --rm-dist
+            condition: not(contains(variables['build.sourceBranch'], 'refs/tags/'))
+            displayName: 'Run goreleaser for snapshots'
+          - script: goreleaser --rm-dist
+            condition: contains(variables['build.sourceBranch'], 'refs/tags/')
+            displayName: 'Run goreleaser'
+            env:
+              GITHUB_TOKEN: $(GITHUB_TOKEN)
+
+      # - job: docker
+      #   steps:
+      #     - task: Docker@2
+      #       displayName: Login to Docker Hub
+      #       inputs:
+      #         command: login
+      #         containerRegistry: docker_hub_davidedimauro88
+      #     - task: Docker@2
+      #       displayName: Build and Push
+      #       inputs:
+      #         command: buildAndPush
+      #         repository: aws-kms-encrypter
+      #         tags: |
+      #           tag1
+      #           tag2
